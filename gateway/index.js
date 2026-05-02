@@ -33,9 +33,8 @@ app.use(
   }),
 );
 
-// 3. Rute ke Notification Service (Port 3002)
 app.use(
-  "/api/notif",
+  "/api/reservation",
   createProxyMiddleware({
     target: "http://localhost:3002",
     changeOrigin: true,
