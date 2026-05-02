@@ -1,20 +1,46 @@
 const express = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const rateLimit = require("express-rate-limit");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const PORT = 3000;
 
-// Syarat: Basic Rate Limiting (Misal 60 request/menit)
+// Kunci ini harus SAMA PERSIS dengan yang ada di Auth Service
+const JWT_ACCESS_SECRET = "Kunci_RahasiaUPNVJ_123";
+
+// Syarat: Basic Rate Limiting (Maks 60 req/menit)
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 menit
-  max: 60, // maksimal 60 request
-  message: "Terlalu banyak request, harapp coba ulang lain waktu",
+  max: 60,
+  message: "Terlalu banyak request, santai dulu bosku!",
 });
 app.use(limiter);
 
-// Peta Routing (Meneruskan dari Gateway ke Service masing-masing)
-// 1. Rute ke Auth Service (Port 3001)
+// Middleware Validasi JWT di Gateway
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Akses Ditolak! Tiket JWT tidak ditemukan." });
+  }
+
+  jwt.verify(token, JWT_ACCESS_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({
+        message: "Akses Ditolak! Tiket JWT tidak valid atau sudah kadaluarsa.",
+      });
+    }
+    // Jika valid, tiket dilewatkan
+    req.user = user;
+    next();
+  });
+};
+
+// 1. Rute Publik (Tidak perlu JWT, karena tempat ambil tiket)
 app.use(
   "/auth",
   createProxyMiddleware({
@@ -23,18 +49,21 @@ app.use(
   }),
 );
 
-// 2. Rute ke Medical Service (Port 8080 - CodeIgniter)
+// 2. Rute Medical + JWT
 app.use(
   "/api/medical",
+  verifyToken,
   createProxyMiddleware({
     target: "http://localhost:8080",
     changeOrigin: true,
-    pathRewrite: { "^/api/medical": "/api" }, // Menyesuaikan URL CI4
+    pathRewrite: { "^/api/medical": "/api" },
   }),
 );
 
+// 3. Rute Reservation + JWT
 app.use(
   "/api/reservation",
+  verifyToken,
   createProxyMiddleware({
     target: "http://localhost:3002",
     changeOrigin: true,
@@ -42,9 +71,13 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Selamat datang di API Gateway UPNVJ!");
+  res.send(
+    "API Gateway UPNVJ Beroperasi. Silakan gunakan Bearer Token untuk akses API.",
+  );
 });
 
 app.listen(PORT, () => {
-  console.log(`API Gateway berjalan sebagai bos di http://localhost:${PORT}`);
+  console.log(
+    `API Gateway siap sebagai pintu utama di http://localhost:${PORT}`,
+  );
 });

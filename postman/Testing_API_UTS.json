@@ -1,0 +1,314 @@
+{
+  "info": {
+    "name": "Testing API UTS Microservices",
+    "description": "Koleksi Postman untuk menguji sistem microservices (API Gateway, Auth, Medical, Reservation) melalui Gateway port 3000.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "http://localhost:3000/auth/api/auth/refresh"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "http://localhost:3000/auth/api/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medical Service",
+      "item": [
+        {
+          "name": "Patients",
+          "item": [
+            {
+              "name": "Get All Patients",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/patients"
+              }
+            },
+            {
+              "name": "Get Patient by ID",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/patients/1"
+              }
+            },
+            {
+              "name": "Create Patient",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Bambang Pamungkas\",\n    \"nik\": \"3201234567890004\",\n    \"phone\": \"081211223344\",\n    \"address\": \"Jl. Kemerdekaan No. 45, Semarang\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/patients"
+              }
+            },
+            {
+              "name": "Update Patient",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Bambang Pamungkas (Updated)\",\n    \"nik\": \"3201234567890004\",\n    \"phone\": \"081211223344\",\n    \"address\": \"Jl. Kemerdekaan No. 45, Semarang\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/patients/1"
+              }
+            },
+            {
+              "name": "Delete Patient",
+              "request": {
+                "method": "DELETE",
+                "url": "http://localhost:3000/api/medical/patients/1"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Doctors",
+          "item": [
+            {
+              "name": "Get All Doctors",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/doctors"
+              }
+            },
+            {
+              "name": "Get Doctor by ID",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/doctors/1"
+              }
+            },
+            {
+              "name": "Create Doctor",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Dr. Ratna Mutiara\",\n    \"specialization\": \"Spesialis Kandungan\",\n    \"phone\": \"081299887766\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/doctors"
+              }
+            },
+            {
+              "name": "Update Doctor",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Dr. Ratna Mutiara\",\n    \"specialization\": \"Spesialis Kandungan (Senior)\",\n    \"phone\": \"081299887766\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/doctors/1"
+              }
+            },
+            {
+              "name": "Delete Doctor",
+              "request": {
+                "method": "DELETE",
+                "url": "http://localhost:3000/api/medical/doctors/1"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Schedules",
+          "item": [
+            {
+              "name": "Get All Schedules",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/schedules"
+              }
+            },
+            {
+              "name": "Get Schedule by ID",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/schedules/1"
+              }
+            },
+            {
+              "name": "Create Schedule",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"doctor_id\": 1,\n    \"day\": \"Selasa\",\n    \"start_time\": \"10:00:00\",\n    \"end_time\": \"14:00:00\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/schedules"
+              }
+            },
+            {
+              "name": "Update Schedule",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"doctor_id\": 1,\n    \"day\": \"Rabu\",\n    \"start_time\": \"08:00:00\",\n    \"end_time\": \"12:00:00\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/schedules/1"
+              }
+            },
+            {
+              "name": "Delete Schedule",
+              "request": {
+                "method": "DELETE",
+                "url": "http://localhost:3000/api/medical/schedules/1"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Prescriptions",
+          "item": [
+            {
+              "name": "Get All Prescriptions",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/prescriptions"
+              }
+            },
+            {
+              "name": "Get Prescription by ID",
+              "request": {
+                "method": "GET",
+                "url": "http://localhost:3000/api/medical/prescriptions/1"
+              }
+            },
+            {
+              "name": "Create Prescription",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"patient_id\": 1,\n    \"doctor_id\": 1,\n    \"medicine\": \"Paracetamol 500mg\",\n    \"dosage\": \"3x Sehari sesudah makan\",\n    \"notes\": \"Minum jika demam\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/prescriptions"
+              }
+            },
+            {
+              "name": "Update Prescription",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"patient_id\": 1,\n    \"doctor_id\": 1,\n    \"medicine\": \"Paracetamol 500mg & Vitamin C\",\n    \"dosage\": \"3x Sehari\",\n    \"notes\": \"Minum rutin\"\n}"
+                },
+                "url": "http://localhost:3000/api/medical/prescriptions/1"
+              }
+            },
+            {
+              "name": "Delete Prescription",
+              "request": {
+                "method": "DELETE",
+                "url": "http://localhost:3000/api/medical/prescriptions/1"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reservation Service",
+      "item": [
+        {
+          "name": "Get All Reservations",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/api/reservation"
+          }
+        },
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"patient_id\": 1,\n    \"schedule_id\": 1\n}"
+            },
+            "url": "http://localhost:3000/api/reservation"
+          }
+        }
+      ]
+    }
+  ]
+}

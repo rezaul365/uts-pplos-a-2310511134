@@ -19,12 +19,12 @@ app.post("/api/reservation", async (req, res) => {
   const { patient_id, schedule_id } = req.body;
 
   try {
-    // 1. Telepon Medical Service untuk cek apakah Pasien ada?
+    // 1. "menghubungi" Medical Service untuk cek apakah Pasien ada?
     const patientCheck = await axios.get(
       `http://localhost:8080/api/patients/${patient_id}`,
     );
 
-    // 2. Telepon Medical Service untuk cek apakah Jadwal Dokter ada?
+    // 2. "menghubungi" Medical Service untuk cek apakah Jadwal Dokter ada?
     const scheduleCheck = await axios.get(
       `http://localhost:8080/api/schedules/${schedule_id}`,
     );
@@ -47,7 +47,7 @@ app.post("/api/reservation", async (req, res) => {
       });
     }
   } catch (error) {
-    // Jika Medical Service bilang 404 Not Found
+    // error handling
     return res.status(404).json({
       status: 404,
       message: "Gagal! Pasien atau Jadwal tidak ditemukan di Medical Service.",
@@ -55,10 +55,15 @@ app.post("/api/reservation", async (req, res) => {
   }
 });
 
-// Endpoint Melihat Semua Reservasi
 app.get("/api/reservation", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM reservations");
-  res.status(200).json({ status: 200, data: rows });
+  try {
+    const [rows] = await pool.query("SELECT * FROM reservations");
+    res.status(200).json({ status: 200, data: rows });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: 500, message: "Terjadi kesalahan pada server database" });
+  }
 });
 
 app.listen(PORT, () => {
