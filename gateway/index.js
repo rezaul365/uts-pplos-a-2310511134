@@ -46,6 +46,7 @@ app.use(
   createProxyMiddleware({
     target: "http://localhost:3001",
     changeOrigin: true,
+    pathRewrite: { "^/": "/auth/" },
   }),
 );
 
@@ -56,9 +57,21 @@ app.use(
   createProxyMiddleware({
     target: "http://localhost:8080",
     changeOrigin: true,
-    pathRewrite: { "^/api/medical": "/api" },
+    pathRewrite: { "^/": "/api/" },
   }),
 );
+
+// Sebelum Direvisi
+//app.use(
+//  "/api/medical",
+//  verifyToken,
+//  createProxyMiddleware({
+//    target: "http://localhost:8080",
+//    changeOrigin: true,
+//    pathRewrite: { "^/api/medical": "/api" }, 
+//  }),
+//);
+
 
 // 3. Rute Reservation + JWT
 app.use(
@@ -67,8 +80,10 @@ app.use(
   createProxyMiddleware({
     target: "http://localhost:3002",
     changeOrigin: true,
+    pathRewrite: { "^/": "/api/reservation/" },
   }),
 );
+
 
 app.get("/", (req, res) => {
   res.send(

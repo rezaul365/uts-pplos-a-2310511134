@@ -26,7 +26,7 @@ class Patients extends Migration
                 'unique' => true,
             ],
             'phone' => [
-                'type' => 'VARChAR', 
+                'type' => 'VARChAR',
                 'constraint' => '20',
                 'unique' => true,
             ],
@@ -34,7 +34,11 @@ class Patients extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
-            'created_t' => [
+            'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
